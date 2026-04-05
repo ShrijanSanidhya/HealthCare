@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const Signup = () => {
     const { signup } = useContext(AuthContext);
@@ -16,7 +17,9 @@ const Signup = () => {
             await signup(name, email, password);
             navigate('/onboarding');
         } catch (err) {
-            setError(err.response?.data?.error || 'Signup failed');
+            const errorMsg = err.response?.data?.error || 'Signup failed';
+            setError(errorMsg);
+            toast.error(errorMsg);
         }
     };
 

@@ -13,15 +13,23 @@ import Chatbot from './components/Chatbot';
 
 const ProtectedRoute = ({ children }) => {
     const { user, loading } = useContext(AuthContext);
-    if (loading) return <div className="app-container"><h3>Loading...</h3></div>;
+    if (loading) return (
+        <div className="app-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection: 'column' }}>
+             <div className="loader-spinner"></div>
+             <p style={{ marginTop: '1rem', color: 'var(--primary)' }}>Booting Health Engine...</p>
+        </div>
+    );
     return user ? children : <Navigate to="/login" />;
 };
+
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   const { user } = useContext(AuthContext);
   
   return (
     <BrowserRouter>
+      <Toaster position="top-center" toastOptions={{ style: { background: '#1c1c21', color: '#e9e6df', border: '1px solid rgba(255,255,255,0.1)' } }} />
       {user && <Navbar />}
       <div className="app-container">
         <Routes>
