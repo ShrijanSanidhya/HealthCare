@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Target, Flame, Droplet, Trophy } from 'lucide-react';
+import { Target, Flame, Droplet, Trophy, Bell, Award } from 'lucide-react';
 
 const Dashboard = () => {
     const { api, user } = useContext(AuthContext);
@@ -42,14 +42,35 @@ const Dashboard = () => {
         const water = e.target.water.value;
         
         const res = await api.post('/log-day', { date: todayDate, intakeCalories: intake, burnedCalories: burned, waterGlasses: water });
-        setData(prev => ({...prev, history: res.data.history, healthScore: res.data.healthScore}));
+        setData(prev => ({...prev, badges: res.data.badges, history: res.data.history, healthScore: res.data.healthScore}));
         e.target.reset();
+    }
+    
+    // Smart Alerts logic based on time
+    const currentHour = new Date().getHours();
+    const alerts = [];
+    if (currentHour >= 13 && todayLog.intakeCalories < 300) {
+        alerts.push({ id: 'missed-meal', text: "Looks like you might have missed a meal today. Don't skip meals, keep your metabolism active!", type: 'warning' });
+    }
+    if (currentHour >= 14 && todayLog.waterGlasses < 4) {
+        alerts.push({ id: 'hydration', text: "Hydration check! Grab a glass of water to easily reach your daily target.", type: 'info' });
     }
 
     return (
         <div className="animate-fade-in">
             <h1 className="text-gradient">Welcome back, {user?.name}!</h1>
             <p>Your Health Credit Score: <strong style={{ color: 'var(--accent)', fontSize: '1.2rem' }}>{data.healthScore} / 100</strong></p>
+            
+            {alerts.length > 0 && (
+                 <div style={{marginTop: '1.5rem'}}>
+                      {alerts.map(a => (
+                           <div key={a.id} style={{ display: 'flex', alignItems: 'center', background: 'rgba(215, 163, 88, 0.2)', border: '1px solid var(--accent)', padding: '0.8rem 1rem', borderRadius: '8px', marginBottom: '10px' }}>
+                                <Bell size={18} color="var(--accent)" style={{marginRight: '10px'}}/>
+                                <span>{a.text}</span>
+                           </div>
+                      ))}
+                 </div>
+            )}
 
             <div className="grid-cols-3" style={{ marginTop: '2rem' }}>
                 <div className="glass-card">
@@ -65,6 +86,19 @@ const Dashboard = () => {
                     <h2 style={{marginTop: '1rem'}}>{data.streak} Days</h2>
                 </div>
             </div>
+            
+            {data.badges && data.badges.length > 0 && (
+                 <div className="glass-card" style={{ marginTop: '2rem' }}>
+                    <h3><Award size={20} style={{verticalAlign:'middle', marginRight:'8px', color: 'var(--primary)'}} /> Your Achievements</h3>
+                    <div style={{display: 'flex', gap: '15px', flexWrap: 'wrap', marginTop: '1rem'}}>
+                         {data.badges.map((b, i) => (
+                              <div key={i} style={{background: 'rgba(0,0,0,0.3)', padding: '0.5rem 1rem', borderRadius: '20px', fontSize: '0.9rem', display: 'flex', alignItems: 'center'}}>
+                                   {b}
+                              </div>
+                         ))}
+                    </div>
+                 </div>
+            )}
 
             <div className="grid-cols-2" style={{ marginTop: '2rem' }}>
                 <div className="glass-card">

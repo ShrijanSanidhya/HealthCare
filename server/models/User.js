@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema({
     healthScore: { type: Number, default: 50 },
     streak: { type: Number, default: 0 },
     lastLogin: { type: Date, default: Date.now },
+    badges: { type: Array, default: [] },
     
     // Daily Logs (embedded for simplicity in this project)
     history: [{

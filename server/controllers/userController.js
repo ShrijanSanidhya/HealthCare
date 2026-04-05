@@ -85,6 +85,7 @@ exports.getDashboard = async (req, res) => {
             targetCalories,
             healthScore: dynamicScore,
             streak: user.streak,
+            badges: user.badges || [],
             history: user.history
         });
     } catch (err) {
@@ -109,6 +110,11 @@ exports.logDay = async (req, res) => {
         if(waterGlasses >= 8) {
             user.healthScore = Math.min(100, user.healthScore + 2);
         }
+        
+        if (!user.badges) user.badges = [];
+        if (user.streak >= 3 && !user.badges.includes('🔥 3-Day Fire')) user.badges.push('🔥 3-Day Fire');
+        if (user.streak >= 7 && !user.badges.includes('🏆 7-Day Champion')) user.badges.push('🏆 7-Day Champion');
+        if (Number(waterGlasses) >= 8 && !user.badges.includes('💧 Hydration Hero')) user.badges.push('💧 Hydration Hero');
         
         await user.save();
         res.json(user);
