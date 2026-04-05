@@ -219,3 +219,15 @@ button.secondary:hover {
 .chat-input input { margin-bottom: 0; border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
 .chat-input button { width: auto; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
 .chat-toggle { align-self: flex-end; width: 50px; height: 50px; border-radius: 25px; padding: 0; display:flex; align-items:center; justify-content:center; font-size: 1.5rem;}
+
+@keyframes typingBounce {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50% { transform: translateY(-5px); opacity: 1; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spin { animation: spin 1s linear infinite; }
+
