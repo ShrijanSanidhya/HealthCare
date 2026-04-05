@@ -127,11 +127,31 @@ exports.getMealPlan = async (req, res) => {
 }
 
 exports.getWorkouts = async (req, res) => {
-     res.json([
-         { name: 'HIIT Core Express', duration: '15 min', intensity: 'High', type: 'Cardio' },
-         { name: 'Full Body Strength', duration: '45 min', intensity: 'Medium', type: 'Strength' },
-         { name: 'Active Recovery Yoga', duration: '30 min', intensity: 'Low', type: 'Flexibility' }
-     ]);
+    try {
+        const timeLimit = parseInt(req.query.time) || 30; // default to 30 if not provided
+        const allWorkouts = [
+            { id: 1, name: 'Quick Stretching', duration: 10, intensity: 'Low', type: 'Flexibility' },
+            { id: 2, name: 'HIIT Core Express', duration: 10, intensity: 'High', type: 'Cardio' },
+            { id: 3, name: 'Brisk Walk', duration: 15, intensity: 'Low', type: 'Cardio' },
+            { id: 4, name: 'Dumbbell Quick Circuit', duration: 15, intensity: 'Medium', type: 'Strength' },
+            { id: 5, name: 'Active Recovery Yoga', duration: 30, intensity: 'Low', type: 'Flexibility' },
+            { id: 6, name: 'Upper Body Blast', duration: 30, intensity: 'High', type: 'Strength' },
+            { id: 7, name: 'Full Body Strength', duration: 45, intensity: 'Medium', type: 'Strength' },
+            { id: 8, name: 'Endurance Run', duration: 60, intensity: 'High', type: 'Cardio' },
+        ];
+        
+        // Filter by available time
+        const suggested = allWorkouts.filter(w => w.duration <= timeLimit);
+        // Shuffle and pick top 3
+        const result = suggested.sort(() => 0.5 - Math.random()).slice(0, 3).map(w => ({
+            ...w,
+            duration: `${w.duration} min`
+        }));
+        
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 }
 
 exports.chatAssistant = async (req, res) => {
