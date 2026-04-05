@@ -221,19 +221,33 @@ exports.chatAssistant = async (req, res) => {
     try {
         const { message } = req.body;
         const msg = message.toLowerCase();
-        let reply = "I am a smart AI but currently I am learning! You can ask me about proteins, hydration, or weight loss tips.";
         
-        if (msg.includes('protein')) {
-             reply = "To get more protein, try incorporating eggs, chicken breasts, lentils, or Greek yogurt into your meals. They're excellent sources!";
+        const user = await User.findById(req.userId);
+        if(!user) return res.status(404).json({error: "User not found"});
+        
+        let reply = "I am a smart AI but currently I am learning! You can ask me about proteins, hydration, or what you should eat today based on your profile.";
+        
+        if (msg.includes('eat today') || msg.includes('what should i eat') || msg.includes('food') || msg.includes('meal')) {
+             if (user.currentMealPlan && user.currentMealPlan.length > 0) {
+                 const meal = user.currentMealPlan[0]; // grab the first meal from their generated plan
+                 reply = `Since you mentioned your goal is to ${user.goal} weight, I highly recommend checking out your AI generated Meal Plan! For instance, right now you could have "${meal.name}" (${meal.calories} kcal) which perfectly matches your ${user.diet} preference!`;
+             } else {
+                 reply = `I don't see an active meal plan generated for you yet, ${user.name}. Head over to the Meals tab and click "Regenerate Plan" to get a customized ${user.diet} plan to help you ${user.goal} weight!`;
+             }
+        } else if (msg.includes('protein')) {
+             const sources = (user.diet === 'veg' || user.diet === 'vegan') ? 'lentils, tofu, chickpeas, or quinoa' : 'chicken breasts, salmon, eggs, or lean turkey';
+             reply = `To hit your protein targets on a ${user.diet} diet, try incorporating ${sources} into your meals. They're excellent fuel!`;
         } else if (msg.includes('water') || msg.includes('hydrate')) {
-             reply = "Remember to drink at least 8 glasses (about 2 liters) of water daily. Proper hydration boosts metabolism!";
+             reply = `Remember to drink at least 8 glasses (about 2 liters) of water daily. Proper hydration boosts metabolism and maintains your streak, ${user.name}!`;
         } else if (msg.includes('calorie') || msg.includes('fat') || msg.includes('lose weight')) {
-             reply = "To burn fat effectively, focus on a caloric deficit from your TDEE and integrate strength training to maintain muscle mass.";
+             const tdee = calculateTDEE(user.weight, user.height, user.age, user.activityLevel, user.goal);
+             reply = `To effectively reach your goal to ${user.goal}, your calculated TDEE energy target is exactly ${tdee} kcal per day. Check the dashboard to track this limit!`;
         } else if (msg.includes('tired') || msg.includes('sleep')) {
-             reply = "Feeling tired? Ensure you're getting 7-9 hours of sleep and eating enough complex carbs like sweet potatoes or oats for sustained energy.";
+             reply = `Feeling tired? Ensure you're getting 7-9 hours of sleep and eating enough complex carbs (like oats or brown rice) to maintain energy levels for your ${user.activityLevel} lifestyle.`;
         } else if (msg.includes('hello') || msg.includes('hi')) {
-             reply = "Hello there! I'm your FitAI assistant. How can I help you reach your health goals today?";
+             reply = `Hello ${user.name}! I'm your intelligent FitAI assistant. How are you tracking against your goal to ${user.goal} weight today?`;
         }
+        
         res.json({ reply });
     } catch (err) {
         res.status(500).json({ error: err.message });
