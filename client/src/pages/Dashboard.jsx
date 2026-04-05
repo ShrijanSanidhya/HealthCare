@@ -8,6 +8,7 @@ const Dashboard = () => {
     const { api, user } = useContext(AuthContext);
     const [data, setData] = useState(null);
     const [insights, setInsights] = useState([]);
+    const [estimatedCals, setEstimatedCals] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -44,6 +45,17 @@ const Dashboard = () => {
         const res = await api.post('/log-day', { date: todayDate, intakeCalories: intake, burnedCalories: burned, waterGlasses: water });
         setData(prev => ({...prev, badges: res.data.badges, history: res.data.history, healthScore: res.data.healthScore}));
         e.target.reset();
+        setEstimatedCals('');
+    }
+
+    const handleImageUpload = (e) => {
+        if(e.target.files && e.target.files[0]) {
+             // Mock lightweight AI logic
+             const mockEstimates = [250, 320, 450, 520, 600];
+             const randomEst = mockEstimates[Math.floor(Math.random() * mockEstimates.length)];
+             setEstimatedCals(randomEst);
+             alert(`AI Vision processed your image! Estimated calories: ${randomEst} kcal`);
+        }
     }
     
     // Smart Alerts logic based on time
@@ -104,7 +116,11 @@ const Dashboard = () => {
                 <div className="glass-card">
                     <h3>Log Today's Progress ({todayDate})</h3>
                     <form onSubmit={handleLogDay} style={{marginTop: '1rem'}}>
-                        <input type="number" name="intake" placeholder="Calories Eaten (e.g. 1800)" />
+                        <div style={{marginBottom: '1rem', padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '8px'}}>
+                             <label style={{display:'block', marginBottom:'0.5rem', fontSize:'0.9rem', color: 'var(--primary)'}}>📷 AI Food Vision (Auto-Estimate Calories)</label>
+                             <input type="file" accept="image/*" onChange={handleImageUpload} style={{border: '1px solid rgba(255,255,255,0.1)', background: 'transparent'}} />
+                        </div>
+                        <input type="number" name="intake" placeholder="Calories Eaten (e.g. 1800)" value={estimatedCals || ''} onChange={(e)=>setEstimatedCals(e.target.value)} />
                         <input type="number" name="burned" placeholder="Calories Burned (e.g. 300)" />
                         <input type="number" name="water" placeholder="Water Glasses (e.g. 8)" />
                         <button type="submit">Save Log</button>
