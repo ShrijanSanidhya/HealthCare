@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(localStorage.getItem('token') || null);
     const [loading, setLoading] = useState(true);
 
-    const api = axios.create({ baseURL: 'http://localhost:5000/api' });
+    const api = axios.create({ baseURL: 'http://localhost:5005/api' });
 
     useEffect(() => {
         if (token) {
