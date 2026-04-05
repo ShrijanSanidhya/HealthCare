@@ -62,10 +62,28 @@ exports.getDashboard = async (req, res) => {
         
         const targetCalories = calculateTDEE(user.weight, user.height, user.age, user.activityLevel, user.goal);
         
+        // Dynamic Health Score logic
+        let dynamicScore = 50 + (user.streak * 2); // default 50 + streak bonus
+        const recentHistory = user.history.slice(-7);
+        recentHistory.forEach(log => {
+             const diff = Math.abs(log.intakeCalories - targetCalories);
+             if (log.intakeCalories > 0 && diff <= 300) dynamicScore += 3; // accuracy bonus
+             else if (log.intakeCalories > 0 && diff > 800) dynamicScore -= 2;
+             
+             if (log.burnedCalories >= 150) dynamicScore += 3; // exercise bonus
+             if (log.waterGlasses >= 8) dynamicScore += 1;
+        });
+        dynamicScore = Math.max(0, Math.min(100, dynamicScore));
+        
+        if (user.healthScore !== dynamicScore) {
+             user.healthScore = dynamicScore; // cache it
+             await user.save();
+        }
+        
         res.json({
             user,
             targetCalories,
-            healthScore: user.healthScore,
+            healthScore: dynamicScore,
             streak: user.streak,
             history: user.history
         });
@@ -96,6 +114,45 @@ exports.logDay = async (req, res) => {
         res.json(user);
     } catch (err) {
          res.status(500).json({ error: err.message });
+    }
+}
+
+exports.getWeeklyInsights = async (req, res) => {
+    try {
+        const user = await User.findById(req.userId);
+        if(!user) return res.status(404).json({error: "User not found"});
+        
+        const history = user.history.slice(-7);
+        let insights = [];
+        const tdee = calculateTDEE(user.weight, user.height, user.age, user.activityLevel, user.goal);
+        
+        let overeatDays = 0;
+        let undereatDays = 0;
+        let hydratedDays = 0;
+        
+        history.forEach(log => {
+             if (log.intakeCalories > tdee + 250) overeatDays++;
+             else if (log.intakeCalories > 0 && log.intakeCalories < tdee - 500) undereatDays++;
+             if (log.waterGlasses >= 8) hydratedDays++;
+        });
+
+        if (overeatDays >= 2) {
+             insights.push({ type: 'warning', text: `You've exceeded your target calories on ${overeatDays} days recently (Overeating pattern). Try incorporating more high-volume, low-calorie foods to stay full.`});
+        }
+        if (undereatDays >= 2) {
+             insights.push({ type: 'warning', text: `You might be skipping meals or undereating (${undereatDays} days). Ensure you eat enough complex carbs and proteins to fuel your metabolism and recovery.`});
+        }
+        if (overeatDays > 0 && undereatDays > 0) {
+             insights.push({ type: 'info', text: `We noticed a nutrient imbalance: fluctuating heavily between high and low calorie days. Consistency is key for achieving your goal.`});
+        }
+        
+        if (insights.length === 0) {
+             insights.push({ type: 'success', text: "Perfect balance! You're consistently hitting your macros and targets. Keep up the excellent habits!" });
+        }
+        
+        res.json({ insights });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 }
 

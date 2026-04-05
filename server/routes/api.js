@@ -13,6 +13,7 @@ router.get('/me', auth, authController.getMe);
 router.post('/profile', auth, userController.updateProfile);
 router.get('/dashboard', auth, userController.getDashboard);
 router.post('/log-day', auth, userController.logDay);
+router.get('/insights', auth, userController.getWeeklyInsights);
 
 // AI & Recommendations
 router.get('/meal-plan', auth, userController.getMealPlan);

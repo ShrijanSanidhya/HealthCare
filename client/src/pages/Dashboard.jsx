@@ -7,6 +7,7 @@ import { Target, Flame, Droplet, Trophy } from 'lucide-react';
 const Dashboard = () => {
     const { api, user } = useContext(AuthContext);
     const [data, setData] = useState(null);
+    const [insights, setInsights] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -17,6 +18,10 @@ const Dashboard = () => {
                     navigate('/onboarding');
                 } else {
                     setData(res.data);
+                    try {
+                        const insightRes = await api.get('/insights');
+                        setInsights(insightRes.data.insights);
+                    } catch(e) {}
                 }
             } catch(err) {
                 console.error(err);
@@ -88,6 +93,19 @@ const Dashboard = () => {
                     ) : <p style={{marginTop: '2rem', color: 'var(--text-muted)'}}>No data to chart yet. Log your first day above!</p>}
                 </div>
             </div>
+
+            {insights.length > 0 && (
+                <div className="glass-card" style={{ marginTop: '2rem' }}>
+                    <h3>Weekly Intelligence Insights</h3>
+                    <ul style={{ marginTop: '1rem', listStyle: 'none' }}>
+                         {insights.map((ins, i) => (
+                             <li key={i} style={{ marginBottom: '10px', padding: '10px', background: ins.type === 'success' ? 'var(--success)' : ins.type === 'warning' ? 'var(--danger)' : 'var(--primary)', color: 'white', borderRadius: '4px' }}>
+                                 {ins.text}
+                             </li>
+                         ))}
+                    </ul>
+                </div>
+            )}
         </div>
     );
 };
