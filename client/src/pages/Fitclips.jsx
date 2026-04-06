@@ -172,7 +172,7 @@ const ReelVideo = ({ video, isActive, isRecommended }) => {
     );
 };
 
-const WorkoutReels = () => {
+const Fitclips = () => {
     const { user } = useContext(AuthContext);
     const [activeVideoId, setActiveVideoId] = useState(mockVideos[0]?.id);
     const containerRef = useRef(null);
@@ -226,18 +226,23 @@ const WorkoutReels = () => {
     }, [reels]);
 
     return (
-        <div className="animate-fade-in reels-container" ref={containerRef}>
-            {reels.map((video) => (
-                <div key={video.id} data-id={video.id} className="reel-video-wrapper">
-                    <ReelVideo 
-                        video={video} 
-                        isActive={activeVideoId === video.id} 
-                        isRecommended={user?.goal ? video.tags.some(t => t.toLowerCase() === user.goal.toLowerCase()) : false}
-                    />
-                </div>
-            ))}
+        <div className="animate-fade-in" style={{ position: 'relative' }}>
+            <div style={{ position: 'absolute', top: '15px', left: '0', right: '0', textAlign: 'center', zIndex: 10, pointerEvents: 'none' }}>
+                <h1 className="text-gradient" style={{ margin: 0, textShadow: '0 2px 10px rgba(0,0,0,0.9)', fontSize: '2rem', fontWeight: 800 }}>Fitclips</h1>
+            </div>
+            <div className="reels-container" ref={containerRef}>
+                {reels.map((video) => (
+                    <div key={video.id} data-id={video.id} className="reel-video-wrapper">
+                        <ReelVideo 
+                            video={video} 
+                            isActive={activeVideoId === video.id} 
+                            isRecommended={user?.goal ? video.tags.some(t => t.toLowerCase() === user.goal.toLowerCase()) : false}
+                        />
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };
 
-export default WorkoutReels;
+export default Fitclips;
