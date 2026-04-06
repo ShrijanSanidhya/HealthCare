@@ -23,22 +23,22 @@ const calculateTDEE = (weight, height, age, activityLevel, goal) => {
 const getMealsDataset = () => {
     return {
         veg: [
-            { id: 'v1', type: 'Breakfast', name: 'Oatmeal with Fruits & Nuts', calories: 350, explanation: 'High in fiber for sustained morning energy.' },
-            { id: 'v2', type: 'Breakfast', name: 'Avocado Toast with Greek Yogurt', calories: 400, explanation: 'Healthy fats paired with protein for fullness.' },
-            { id: 'v3', type: 'Lunch', name: 'Quinoa and Roasted Chickpea Salad', calories: 500, explanation: 'Complete protein source for muscle recovery.' },
-            { id: 'v4', type: 'Lunch', name: 'Lentil Soup with Whole Grain Bread', calories: 450, explanation: 'Rich in iron and fiber, excellent for digestion.' },
-            { id: 'v5', type: 'Dinner', name: 'Tofu Stir-fry with Brown Rice', calories: 550, explanation: 'Low glycemic index and high protein.' },
-            { id: 'v6', type: 'Dinner', name: 'Paneer Tikka with Mixed Greens', calories: 500, explanation: 'Calcium and protein-rich dinner.' },
-            { id: 'v7', type: 'Snack', name: 'Mixed Nuts & Apple', calories: 200, explanation: 'Quick energy boost with essential micronutrients.' }
+            { id: 'v1', type: 'Breakfast', name: 'Oatmeal with Fruits & Nuts', calories: 350, proteinGrams: 10, prepTime: 5, ingredients: ['oats', 'milk', 'apple', 'banana', 'nuts'], explanation: 'High in fiber for sustained morning energy.' },
+            { id: 'v2', type: 'Breakfast', name: 'Avocado Toast with Greek Yogurt', calories: 400, proteinGrams: 15, prepTime: 10, ingredients: ['bread', 'avocado', 'yogurt', 'olive oil'], explanation: 'Healthy fats paired with protein for fullness.' },
+            { id: 'v3', type: 'Lunch', name: 'Quinoa and Roasted Chickpea Salad', calories: 500, proteinGrams: 18, prepTime: 20, ingredients: ['quinoa', 'chickpeas', 'tomato', 'cucumber', 'lemon'], explanation: 'Complete protein source for muscle recovery.' },
+            { id: 'v4', type: 'Lunch', name: 'Lentil Soup with Whole Grain Bread', calories: 450, proteinGrams: 22, prepTime: 30, ingredients: ['lentils', 'onion', 'carrot', 'celery', 'bread'], explanation: 'Rich in iron and fiber, excellent for digestion.' },
+            { id: 'v5', type: 'Dinner', name: 'Tofu Stir-fry with Brown Rice', calories: 550, proteinGrams: 25, prepTime: 15, ingredients: ['tofu', 'rice', 'broccoli', 'soy sauce', 'garlic'], explanation: 'Low glycemic index and high protein.' },
+            { id: 'v6', type: 'Dinner', name: 'Paneer Tikka with Mixed Greens', calories: 500, proteinGrams: 20, prepTime: 25, ingredients: ['paneer', 'spinach', 'onion', 'tomato', 'spices'], explanation: 'Calcium and protein-rich dinner.' },
+            { id: 'v7', type: 'Snack', name: 'Mixed Nuts & Apple', calories: 200, proteinGrams: 5, prepTime: 2, ingredients: ['nuts', 'apple'], explanation: 'Quick energy boost with essential micronutrients.' }
         ],
         nonVeg: [
-             { id: 'nv1', type: 'Breakfast', name: 'Scrambled Eggs with Spinach', calories: 350, explanation: 'High quality amino acids to kickstart your day.' },
-             { id: 'nv2', type: 'Breakfast', name: 'Chicken Sausage & Multigrain Bread', calories: 400, explanation: 'Lean protein for a filling morning.' },
-             { id: 'nv3', type: 'Lunch', name: 'Grilled Chicken Breast with Quinoa', calories: 500, explanation: 'Classic lean protein and complex carbs.' },
-             { id: 'nv4', type: 'Lunch', name: 'Salmon with Roasted Sweet Potatoes', calories: 600, explanation: 'Rich in Omega-3 for brain and heart health.' },
-             { id: 'nv5', type: 'Dinner', name: 'Turkey Meatballs with Zucchini Noodles', calories: 450, explanation: 'Low calorie, high protein dinner option.' },
-             { id: 'nv6', type: 'Dinner', name: 'Shrimp Curry with Cauliflower Rice', calories: 400, explanation: 'Light and highly nutritious evening meal.' },
-             { id: 'nv7', type: 'Snack', name: 'Greek Yogurt and Tuna Salad', calories: 250, explanation: 'Double protein hit without heavy carbs.' }
+             { id: 'nv1', type: 'Breakfast', name: 'Scrambled Eggs with Spinach', calories: 350, proteinGrams: 20, prepTime: 10, ingredients: ['eggs', 'spinach', 'butter', 'salt'], explanation: 'High quality amino acids to kickstart your day.' },
+             { id: 'nv2', type: 'Breakfast', name: 'Chicken Sausage & Multigrain Bread', calories: 400, proteinGrams: 22, prepTime: 15, ingredients: ['chicken sausage', 'bread', 'mustard'], explanation: 'Lean protein for a filling morning.' },
+             { id: 'nv3', type: 'Lunch', name: 'Grilled Chicken Breast with Quinoa', calories: 500, proteinGrams: 35, prepTime: 25, ingredients: ['chicken breast', 'quinoa', 'olive oil', 'broccoli', 'lemon'], explanation: 'Classic lean protein and complex carbs.' },
+             { id: 'nv4', type: 'Lunch', name: 'Salmon with Roasted Sweet Potatoes', calories: 600, proteinGrams: 30, prepTime: 30, ingredients: ['salmon', 'sweet potato', 'olive oil', 'garlic'], explanation: 'Rich in Omega-3 for brain and heart health.' },
+             { id: 'nv5', type: 'Dinner', name: 'Turkey Meatballs with Zucchini Noodles', calories: 450, proteinGrams: 28, prepTime: 20, ingredients: ['turkey', 'zucchini', 'tomato sauce', 'onion'], explanation: 'Low calorie, high protein dinner option.' },
+             { id: 'nv6', type: 'Dinner', name: 'Shrimp Curry with Cauliflower Rice', calories: 400, proteinGrams: 25, prepTime: 20, ingredients: ['shrimp', 'cauliflower', 'coconut milk', 'curry powder', 'garlic'], explanation: 'Light and highly nutritious evening meal.' },
+             { id: 'nv7', type: 'Snack', name: 'Greek Yogurt and Tuna Salad', calories: 250, proteinGrams: 18, prepTime: 5, ingredients: ['yogurt', 'tuna', 'celery', 'onion'], explanation: 'Double protein hit without heavy carbs.' }
         ]
     }
 }
@@ -167,19 +167,101 @@ exports.getMealPlan = async (req, res) => {
         const user = await User.findById(req.userId);
         const { diet } = user;
         const dataset = getMealsDataset();
-        const pool = (diet === 'veg' || diet === 'vegan') ? dataset.veg : dataset.nonVeg;
+        // Base pool based on diet
+        let pool = (diet === 'veg' || diet === 'vegan') ? dataset.veg : dataset.nonVeg;
         
-        const breakfasts = pool.filter(m => m.type === 'Breakfast');
-        const lunches = pool.filter(m => m.type === 'Lunch');
-        const dinners = pool.filter(m => m.type === 'Dinner');
-        const snacks = pool.filter(m => m.type === 'Snack');
+        // Advanced Filters
+        const { ingredients, highProtein, quickMeals, lowCalorie } = req.query;
         
-        const currentMeals = [
-             breakfasts[Math.floor(Math.random() * breakfasts.length) || 0],
-             lunches[Math.floor(Math.random() * lunches.length) || 0],
-             dinners[Math.floor(Math.random() * dinners.length) || 0],
-             snacks[0] || dataset.veg[6]
-        ];
+        if (highProtein === 'true') {
+            pool = pool.filter(m => m.proteinGrams >= 20); // arbitrary threshold for high protein
+        }
+        if (quickMeals === 'true') {
+            pool = pool.filter(m => m.prepTime <= 15);
+        }
+        if (lowCalorie === 'true') {
+            pool = pool.filter(m => m.calories <= 400);
+        }
+        
+        let currentMeals = [];
+
+        // If ingredients are provided, perform smart matching
+        if (ingredients && ingredients.trim().length > 0) {
+            const userIngredients = ingredients.toLowerCase().split(',').map(i => i.trim()).filter(Boolean);
+            
+            // Score meals and attach missing ingredients
+            const scoredPool = pool.map(meal => {
+                const available = [];
+                const missing = [];
+                
+                meal.ingredients.forEach(ing => {
+                    // Simple partial string match check (e.g. 'tomato' matching 'tomatoes')
+                    const hasMatch = userIngredients.some(ui => ing.includes(ui) || ui.includes(ing));
+                    if (hasMatch) {
+                        available.push(ing);
+                    } else {
+                        missing.push(ing);
+                    }
+                });
+                
+                return {
+                    ...meal,
+                    matchedIngredients: available,
+                    missingIngredients: missing,
+                    matchScore: available.length, // Primary sort key
+                    missingCount: missing.length  // Secondary sort key
+                };
+            }).filter(meal => meal.matchScore > 0); // Must match at least 1 ingredient
+            
+            // Sort by highest match score, then by lowest missing count
+            scoredPool.sort((a, b) => {
+                if (b.matchScore !== a.matchScore) return b.matchScore - a.matchScore;
+                return a.missingCount - b.missingCount;
+            });
+
+            // Fallback: If no matches at all
+            if (scoredPool.length === 0) {
+                return res.json({ noMatch: true, message: "No meals found with current ingredients. Try adding more items." });
+            }
+
+            // Pick highest scoring meals, trying to keep a balance if possible, or just the top 4
+            // Since ingredient-based tends to be limited, we'll just provide the best matches across any category
+            // But let's try to group top matches by type to give a proper 'plan'
+            const bestBreakfast = scoredPool.find(m => m.type === 'Breakfast');
+            const bestLunch = scoredPool.find(m => m.type === 'Lunch');
+            const bestDinner = scoredPool.find(m => m.type === 'Dinner');
+            const bestSnack = scoredPool.find(m => m.type === 'Snack');
+            
+            // If they don't have a perfect plan out of matches, supplement with other top matches
+            const selected = [bestBreakfast, bestLunch, bestDinner, bestSnack].filter(Boolean);
+            if (selected.length < (scoredPool.length > 4 ? 4 : scoredPool.length)) {
+                for (let meal of scoredPool) {
+                    if (!selected.find(s => s.id === meal.id)) selected.push(meal);
+                    if (selected.length >= 4) break;
+                }
+            }
+            
+            currentMeals = selected;
+        } else {
+            // Standard Generation Logic
+            if (pool.length === 0) {
+                return res.json({ noMatch: true, message: "No meals found matching your current filters." });
+            }
+            const breakfasts = pool.filter(m => m.type === 'Breakfast');
+            const lunches = pool.filter(m => m.type === 'Lunch');
+            const dinners = pool.filter(m => m.type === 'Dinner');
+            const snacks = pool.filter(m => m.type === 'Snack');
+            
+            // Use fallback to 0th elements if a category is empty due to strict filters
+            currentMeals = [
+                 breakfasts[Math.floor(Math.random() * breakfasts.length)] || pool[0],
+                 lunches[Math.floor(Math.random() * lunches.length)] || pool[1] || pool[0],
+                 dinners[Math.floor(Math.random() * dinners.length)] || pool[2] || pool[0],
+                 snacks[Math.floor(Math.random() * snacks.length)] || pool[3] || pool[0]
+            ];
+            // Remove duplicates if filters made the pool extremely small
+            currentMeals = [...new Set(currentMeals)];
+        }
         
         user.currentMealPlan = currentMeals;
         await user.save();
