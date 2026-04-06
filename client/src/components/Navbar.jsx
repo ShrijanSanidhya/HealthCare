@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { Activity, Salad, Home, LogOut } from 'lucide-react';
+import { Activity, Salad, Home, LogOut, Smartphone } from 'lucide-react';
 
 const Navbar = () => {
     const { logout, user } = useContext(AuthContext);
@@ -26,6 +26,9 @@ const Navbar = () => {
                 </Link>
                 <Link to="/workouts" className={location.pathname === '/workouts' ? 'active' : ''}>
                     <Activity size={18} style={{ marginRight: '5px', verticalAlign: 'middle' }}/> Workouts
+                </Link>
+                <Link to="/workout-reels" className={location.pathname === '/workout-reels' ? 'active' : ''}>
+                    <Smartphone size={18} style={{ marginRight: '5px', verticalAlign: 'middle' }}/> Reels
                 </Link>
                 
                 <button onClick={handleLogout} className="secondary" style={{ width: 'auto', padding: '0.4rem 1rem', marginLeft: '1rem' }}>

@@ -231,3 +231,139 @@ button.secondary:hover {
 
 .spin { animation: spin 1s linear infinite; }
 
+
+/* Reels UI */
+.reels-container {
+  height: calc(100vh - 83px);
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-top: -2rem;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  background: #000;
+}
+.reels-container::-webkit-scrollbar {
+  display: none;
+}
+.reels-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.reel-video-wrapper {
+  height: 100%;
+  width: 100%;
+  scroll-snap-align: start;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+}
+
+.reel-video {
+  height: 100%;
+  width: 100%;
+  max-width: 500px;
+  object-fit: contain;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.reel-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 6rem 2rem 3rem 2rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+}
+
+.reel-overlay-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  pointer-events: auto;
+  max-width: 500px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.reel-details {
+  flex: 1;
+  padding-right: 2rem;
+}
+
+.reel-details h2 {
+  margin: 0 0 5px 0;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+  font-size: 1.8rem;
+}
+
+.reel-badge {
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.reel-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.reel-action-btn-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.reel-action-btn {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  padding: 0;
+}
+
+.reel-action-btn:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  transform: scale(1.1);
+  box-shadow: 0 0 15px var(--primary-glow);
+}
+
+.reel-action-btn-text {
+  font-size: 0.75rem;
+  margin-top: 6px;
+  color: #fff;
+  font-weight: 500;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+}
