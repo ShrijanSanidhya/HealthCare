@@ -13,6 +13,9 @@ const Navbar = () => {
         navigate('/login');
     };
 
+    const hour = new Date().getHours();
+    const timeEmoji = hour < 12 ? '🌅' : hour < 17 ? '☀️' : '🌙';
+
     return (
         <nav className="navbar app-container" style={{ marginBottom: 0, padding: '1.5rem 2rem' }}>
             <div className="logo text-gradient">FitAI</div>
@@ -30,8 +33,10 @@ const Navbar = () => {
                 <Link to="/fitclips" className={location.pathname === '/fitclips' ? 'active' : ''}>
                     <Smartphone size={18} style={{ marginRight: '5px', verticalAlign: 'middle' }}/> Fitclips
                 </Link>
-                
-                <button onClick={handleLogout} className="secondary" style={{ width: 'auto', padding: '0.4rem 1rem', marginLeft: '1rem' }}>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px', padding: '0 0.5rem' }}>
+                    {timeEmoji} {user?.name?.split(' ')[0]}
+                </span>
+                <button onClick={handleLogout} className="secondary" style={{ width: 'auto', padding: '0.4rem 1rem', marginLeft: '0.5rem' }}>
                     <LogOut size={16} />
                 </button>
             </div>
