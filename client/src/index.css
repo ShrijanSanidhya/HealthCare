@@ -599,3 +599,19 @@ button.secondary:hover {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* Duration hold chip — bottom-left of image */
+.duration-chip {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  background: rgba(249, 115, 22, 0.25);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid #f97316;
+  color: #f97316;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+}
