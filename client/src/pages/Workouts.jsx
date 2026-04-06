@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { Play, Clock, Filter } from 'lucide-react';
 import toast from 'react-hot-toast';
+import GuidedWorkout from '../components/GuidedWorkout';
 
 const intensityColors = { Low: '#22c55e', Medium: '#f97316', High: '#ef4444' };
 const typeIcons = { Cardio: '🏃', Strength: '💪', Flexibility: '🧘', HIIT: '⚡' };
@@ -11,7 +12,7 @@ const Workouts = () => {
     const [workouts, setWorkouts] = useState([]);
     const [timeLimit, setTimeLimit] = useState(30);
     const [loading, setLoading] = useState(false);
-    const [activeSession, setActiveSession] = useState(null);
+    const [activeWorkout, setActiveWorkout] = useState(null);
 
     const fetchWorkouts = async (time) => {
         setLoading(true);
@@ -37,13 +38,12 @@ const Workouts = () => {
     };
 
     const handleStartSession = (workout) => {
-        setActiveSession(workout);
-        toast.success(`🏋️ Starting "${workout.name}" — Stay focused!`);
-        setTimeout(() => {
-            setActiveSession(null);
-            toast.success(`✅ "${workout.name}" session complete! Great work.`);
-        }, 5000);
+        setActiveWorkout(workout);
     };
+
+    if (activeWorkout) {
+        return <GuidedWorkout workout={activeWorkout} onEnd={() => setActiveWorkout(null)} />;
+    }
 
     return (
         <div className="animate-fade-in">
@@ -95,11 +95,9 @@ const Workouts = () => {
                             </div>
                             <button
                                 onClick={() => handleStartSession(w)}
-                                className={activeSession?.id === w.id ? '' : 'secondary'}
                                 style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '1.25rem' }}
                             >
-                                <Play size={15} />
-                                {activeSession?.id === w.id ? 'In Progress...' : 'Start Session'}
+                                <Play size={15} /> Start Session
                             </button>
                         </div>
                     ))}
