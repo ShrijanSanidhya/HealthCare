@@ -8,7 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Onboarding from './pages/Onboarding';
 import MealPlan from './pages/MealPlan';
 import Workouts from './pages/Workouts';
-import WorkoutReels from './pages/WorkoutReels';
+import Fitclips from './pages/Fitclips';
 import Navbar from './components/Navbar';
 import Chatbot from './components/Chatbot';
 
@@ -41,7 +41,7 @@ function App() {
           <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
           <Route path="/meal-plan" element={<ProtectedRoute><MealPlan /></ProtectedRoute>} />
           <Route path="/workouts" element={<ProtectedRoute><Workouts /></ProtectedRoute>} />
-          <Route path="/workout-reels" element={<ProtectedRoute><WorkoutReels /></ProtectedRoute>} />
+          <Route path="/fitclips" element={<ProtectedRoute><Fitclips /></ProtectedRoute>} />
         </Routes>
       </div>
       {user && <Chatbot />}

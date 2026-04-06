@@ -27,8 +27,8 @@ const Navbar = () => {
                 <Link to="/workouts" className={location.pathname === '/workouts' ? 'active' : ''}>
                     <Activity size={18} style={{ marginRight: '5px', verticalAlign: 'middle' }}/> Workouts
                 </Link>
-                <Link to="/workout-reels" className={location.pathname === '/workout-reels' ? 'active' : ''}>
-                    <Smartphone size={18} style={{ marginRight: '5px', verticalAlign: 'middle' }}/> Reels
+                <Link to="/fitclips" className={location.pathname === '/fitclips' ? 'active' : ''}>
+                    <Smartphone size={18} style={{ marginRight: '5px', verticalAlign: 'middle' }}/> Fitclips
                 </Link>
                 
                 <button onClick={handleLogout} className="secondary" style={{ width: 'auto', padding: '0.4rem 1rem', marginLeft: '1rem' }}>
