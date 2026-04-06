@@ -443,81 +443,144 @@ button.secondary:hover {
   flex-direction: column;
 }
 
+/* === VISUAL STEP CARD === */
 .exercise-card {
   padding: 0;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  flex: 1;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(255,255,255,0.07);
 }
 .exercise-card:hover {
   transform: none;
-  box-shadow: 0 8px 30px rgba(0,0,0, 0.5);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+}
+
+.visual-step-card {
+  position: relative;
+}
+
+/* Transition animations */
+@keyframes stepEnter {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes stepExit {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-12px); }
+}
+.step-enter {
+  animation: stepEnter 0.25s ease forwards;
+}
+.step-exit {
+  animation: stepExit 0.15s ease forwards;
+}
+
+/* Completion trophy pulse */
+@keyframes trophyPulse {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+.completion-trophy {
+  animation: trophyPulse 1.8s ease-in-out infinite;
 }
 
 .exercise-image-wrapper {
   width: 100%;
-  height: 350px;
-  background: #000;
+  height: 400px;
+  background: #111;
+  position: relative;
+  overflow: hidden;
 }
 
 .exercise-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  animation: stepEnter 0.3s ease forwards;
 }
 
-.exercise-content {
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+/* Step badge — top-left of image */
+.step-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
-.exercise-title {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  color: var(--accent);
-}
-
-.exercise-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.step-item {
-  display: flex;
-  gap: 1rem;
-  align-items: flex-start;
-  background: rgba(255,255,255,0.02);
-  padding: 1rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid rgba(255,255,255,0.05);
-}
-
-.step-number {
-  background: rgba(133, 154, 81, 0.2);
+/* Exercise name chip — top-right of image */
+.exercise-chip {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(133,154,81,0.25);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--primary);
   color: var(--primary);
-  min-width: 30px;
-  height: 30px;
-  border-radius: 15px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  border: 1px solid var(--primary);
+  gap: 5px;
 }
 
-.step-text {
+/* Step instruction text area */
+.visual-step-instruction {
+  padding: 1.75rem 2rem 1rem;
+  background: var(--bg-card);
+}
+
+.visual-step-text {
   margin: 0;
-  line-height: 1.6;
-  font-size: 1.05rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.65;
   color: var(--text-main);
-  padding-top: 2px;
+  text-align: center;
 }
 
+/* Step progress dots */
+.step-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 1rem 2rem 1.5rem;
+  background: var(--bg-card);
+}
+
+.step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  transition: all 0.3s ease;
+}
+.step-dot.active {
+  width: 22px;
+  border-radius: 4px;
+  background: var(--primary);
+  box-shadow: 0 0 8px var(--primary-glow);
+}
+.step-dot.done {
+  background: rgba(133,154,81,0.45);
+}
+
+/* Controls */
 .guided-workout-controls {
   display: flex;
   justify-content: space-between;
