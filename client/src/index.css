@@ -1,20 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --bg-dark: #23201a;
-  --bg-card: #2e2a22;
-  --bg-card-hover: #3d382e;
-  --primary: #859a51;
-  --primary-glow: rgba(133, 154, 81, 0.4);
-  --accent: #dca358;
-  --text-main: #fcfaf2;
-  --text-muted: #bab4a6;
-  --danger: #cf4e4e;
-  --success: #67a659;
+  --bg-dark: #0d1117;
+  --bg-card: #161b22;
+  --bg-card-hover: #21262d;
+  --primary: #e11d48;
+  --primary-glow: rgba(225, 29, 72, 0.4);
+  --accent: #9f1239;
+  --text-main: #ffffff;
+  --text-muted: #8b949e;
+  --danger: #ef4444;
+  --success: #22c55e;
   
   --radius-sm: 8px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
 }
 
 * {
@@ -78,8 +78,8 @@ input:focus, select:focus, textarea:focus {
 }
 
 button {
-  background: linear-gradient(45deg, var(--primary), #7b2cbf);
-  color: white;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #fff;
   border: none;
   padding: 0.8rem 1.5rem;
   border-radius: var(--radius-sm);
@@ -101,7 +101,7 @@ button.secondary {
 }
 button.secondary:hover {
   background: var(--primary);
-  color: white;
+  color: #fff;
   box-shadow: none;
 }
 
@@ -150,30 +150,108 @@ button.secondary:hover {
   to { transform: rotate(360deg); }
 }
 
-/* Nav */
-.navbar {
+/* Layout Container */
+.app-layout {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 0;
-  margin-bottom: 2rem;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  min-height: 100vh;
 }
 
-.navbar .logo {
+.sidebar {
+  width: 260px;
+  background: var(--bg-card);
+  border-right: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.sidebar-logo {
   font-size: 1.5rem;
   font-weight: 700;
+  padding: 0 2rem;
+  margin-bottom: 3rem;
 }
-.nav-links { display: flex; gap: 1.5rem; align-items: center; }
-.nav-links auto { margin-left: auto; }
-.nav-links a {
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 1rem;
+  flex: 1;
+}
+
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   color: var(--text-muted);
   text-decoration: none;
-  transition: color 0.3s ease;
-  cursor: pointer;
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+  font-weight: 500;
 }
-.nav-links a:hover, .nav-links a.active {
-  color: var(--accent);
+
+.sidebar-nav a:hover, .sidebar-nav a.active {
+  background: rgba(133, 154, 81, 0.15);
+  color: var(--primary);
+}
+
+.sidebar-bottom {
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem 3rem;
+  max-width: 1200px;
+  width: 100%;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-md);
+  padding: 2rem;
+  width: 100%;
+  max-width: 500px;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.modal-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  width: auto;
+}
+.modal-close:hover {
+  background: transparent;
+  color: white;
+  box-shadow: none;
 }
 
 .auth-container {
@@ -234,14 +312,16 @@ button.secondary:hover {
 
 /* Reels UI */
 .reels-container {
-  height: calc(100vh - 83px);
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
-  margin-top: -2rem;
+  height: calc(100vh - 4rem);
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  border-radius: var(--radius-md);
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
-  background: #000;
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.05);
 }
 .reels-container::-webkit-scrollbar {
   display: none;

@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { Play, Clock, Filter } from 'lucide-react';
+import { Play, Clock, Dumbbell, Activity, Flame, SearchX } from 'lucide-react';
 import toast from 'react-hot-toast';
 import GuidedWorkout from '../components/GuidedWorkout';
 
 const intensityColors = { Low: '#22c55e', Medium: '#f97316', High: '#ef4444' };
-const typeIcons = { Cardio: '🏃', Strength: '💪', Flexibility: '🧘', HIIT: '⚡' };
 
 const Workouts = () => {
     const { api, user } = useContext(AuthContext);
@@ -49,8 +48,10 @@ const Workouts = () => {
         <div className="animate-fade-in">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
                 <div>
-                    <h1 className="text-gradient">Let's move! 🏋️</h1>
-                    <p>Curated routines for your <strong style={{ color: 'var(--accent)' }}>{user?.activityLevel || 'lifestyle'}</strong> level — goal: <strong style={{ color: '#f97316' }}>{user?.goal || 'get fit'}</strong>.</p>
+                    <h1 className="text-gradient" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <Dumbbell size={28} /> AI Workouts
+                    </h1>
+                    <p>Curated routines for your <strong style={{ color: 'var(--accent)', textTransform: 'capitalize' }}>{user?.activityLevel || 'lifestyle'}</strong> level — goal: <strong style={{ color: '#f97316', textTransform: 'lowercase' }}>{user?.goal || 'get fit'}</strong>.</p>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.05)', padding: '0.6rem 1rem', borderRadius: '10px' }}>
                     <Clock size={18} color="var(--accent)" />
@@ -74,13 +75,15 @@ const Workouts = () => {
 
             {!loading && workouts.length === 0 && (
                 <div className="glass-card" style={{ marginTop: '2rem', textAlign: 'center', padding: '3rem' }}>
-                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>😅</div>
-                    <h3 style={{ marginBottom: '0.5rem' }}>Nothing fits {timeLimit} min right now</h3>
-                    <p style={{ color: 'var(--text-muted)', margin: 0 }}>Try bumping up your available time — even 5 more minutes unlocks new options!</p>
+                    <div style={{ marginBottom: '1rem', color: 'var(--text-muted)' }}>
+                        <SearchX size={48} style={{ opacity: 0.5 }} />
+                    </div>
+                    <h3 style={{ marginBottom: '0.5rem' }}>No workouts fit {timeLimit} min right now</h3>
+                    <p style={{ color: 'var(--text-muted)', margin: 0 }}>Try adjusting your available time — even 5 more minutes unlocks new options.</p>
                 </div>
             )}
 
-            {!loading && (
+            {!loading && workouts.length > 0 && (
                 <div className="grid-cols-3" style={{ marginTop: '2rem' }}>
                     {workouts.map((w, i) => (
                         <div key={i} className="glass-card" style={{ display: 'flex', flexDirection: 'column', borderTop: `3px solid ${intensityColors[w.intensity] || 'var(--primary)'}` }}>
@@ -88,18 +91,26 @@ const Workouts = () => {
                                 <span style={{ background: intensityColors[w.intensity] || 'var(--primary)', padding: '0.2rem 0.7rem', borderRadius: '20px', fontSize: '0.78rem', color: '#fff', fontWeight: '600' }}>
                                     {w.intensity}
                                 </span>
-                                <span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>⏱ {w.duration}</span>
+                                <span style={{ color: 'var(--text-muted)', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                    <Clock size={14} /> {w.duration}
+                                </span>
                             </div>
-                            <div style={{ marginTop: '1.25rem', flex: 1 }}>
-                                <div style={{ fontSize: '1.8rem', marginBottom: '6px' }}>{typeIcons[w.type] || '🏃'}</div>
-                                <h3 style={{ marginBottom: '4px' }}>{w.name}</h3>
-                                <p style={{ fontSize: '0.85rem', margin: 0, color: 'var(--text-muted)' }}>{w.type} · Burns ~{w.intensity === 'High' ? '300–400' : w.intensity === 'Medium' ? '180–250' : '80–130'} kcal</p>
+                            <div style={{ marginTop: '1.5rem', flex: 1 }}>
+                                <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', padding: '12px', borderRadius: '12px', marginBottom: '12px' }}>
+                                    <Activity size={24} color="var(--accent)" />
+                                </div>
+                                <h3 style={{ marginBottom: '8px', fontSize: '1.2rem' }}>{w.name}</h3>
+                                <p style={{ fontSize: '0.85rem', margin: 0, color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                    <span>{w.type}</span>
+                                    <span>·</span>
+                                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><Flame size={12} color="#f97316" /> ~{w.intensity === 'High' ? '300–400' : w.intensity === 'Medium' ? '180–250' : '80–130'} kcal</span>
+                                </p>
                             </div>
                             <button
                                 onClick={() => handleStartSession(w)}
-                                style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginTop: '1.25rem' }}
+                                style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '1.5rem' }}
                             >
-                                <Play size={15} /> Let's go!
+                                <Play size={16} fill="currentColor" /> Start Workout
                             </button>
                         </div>
                     ))}

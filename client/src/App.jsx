@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthContext } from './context/AuthContext';
+import { Toaster } from 'react-hot-toast';
 
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -9,21 +10,20 @@ import Onboarding from './pages/Onboarding';
 import MealPlan from './pages/MealPlan';
 import Workouts from './pages/Workouts';
 import Fitclips from './pages/Fitclips';
-import Navbar from './components/Navbar';
+import Profile from './pages/Profile';
+import Layout from './components/Layout';
 import Chatbot from './components/Chatbot';
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRouteWrapper = ({ children }) => {
     const { user, loading } = useContext(AuthContext);
     if (loading) return (
-        <div className="app-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection: 'column' }}>
              <div className="loader-spinner"></div>
              <p style={{ marginTop: '1rem', color: 'var(--primary)' }}>Booting Health Engine...</p>
         </div>
     );
-    return user ? children : <Navigate to="/login" />;
+    return user ? <Layout>{children}</Layout> : <Navigate to="/login" />;
 };
-
-import { Toaster } from 'react-hot-toast';
 
 function App() {
   const { user } = useContext(AuthContext);
@@ -31,19 +31,22 @@ function App() {
   return (
     <BrowserRouter>
       <Toaster position="top-center" toastOptions={{ style: { background: '#1c1c21', color: '#e9e6df', border: '1px solid rgba(255,255,255,0.1)' } }} />
-      {user && <Navbar />}
-      <div className="app-container">
-        <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-          <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
-          <Route path="/meal-plan" element={<ProtectedRoute><MealPlan /></ProtectedRoute>} />
-          <Route path="/workouts" element={<ProtectedRoute><Workouts /></ProtectedRoute>} />
-          <Route path="/fitclips" element={<ProtectedRoute><Fitclips /></ProtectedRoute>} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={<Navigate to="/dashboard" />} />
+        
+        {/* Public Routes */}
+        <Route path="/login" element={<div className="app-container"><Login /></div>} />
+        <Route path="/signup" element={<div className="app-container"><Signup /></div>} />
+        
+        {/* Protected Routes (Wrapped in Layout) */}
+        <Route path="/dashboard" element={<ProtectedRouteWrapper><Dashboard /></ProtectedRouteWrapper>} />
+        <Route path="/onboarding" element={<ProtectedRouteWrapper><Onboarding /></ProtectedRouteWrapper>} />
+        <Route path="/meal-plan" element={<ProtectedRouteWrapper><MealPlan /></ProtectedRouteWrapper>} />
+        <Route path="/workouts" element={<ProtectedRouteWrapper><Workouts /></ProtectedRouteWrapper>} />
+        <Route path="/fitclips" element={<ProtectedRouteWrapper><Fitclips /></ProtectedRouteWrapper>} />
+        <Route path="/profile" element={<ProtectedRouteWrapper><Profile /></ProtectedRouteWrapper>} />
+      </Routes>
+      
       {user && <Chatbot />}
     </BrowserRouter>
   );

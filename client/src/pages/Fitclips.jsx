@@ -129,7 +129,7 @@ const ReelVideo = ({ video, isActive, isRecommended }) => {
                 <div className="reel-overlay-content">
                     <div className="reel-details">
                         {isRecommended && (
-                            <div className="reel-badge" style={{ backgroundColor: 'rgba(133, 154, 81, 0.4)', borderColor: 'var(--primary)' }}>
+                            <div className="reel-badge" style={{ backgroundColor: 'var(--primary-glow)', borderColor: 'var(--primary)' }}>
                                 Recommended for your goal
                             </div>
                         )}
