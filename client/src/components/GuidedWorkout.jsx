@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { ArrowLeft, ArrowRight, X, CheckCircle, Trophy, Dumbbell, Pause, Play } from 'lucide-react';
 
 const DEFAULT_DURATION = 8; // seconds for regular movement steps
@@ -353,33 +354,28 @@ const WORKOUT_DICTIONARY = {
 const getWorkoutExercises = (name) =>
   WORKOUT_DICTIONARY[name] || WORKOUT_DICTIONARY['__fallback__'];
 
-/* ── Countdown Ring ────────────────────────────────────────────────────────── */
-const CountdownRing = ({ total, remaining, isPaused }) => {
-  const r = 22;
+/* ── Countdown Ring ── */
+const CountdownRing = ({ total, remaining }) => {
+  const r = 26;
   const circ = 2 * Math.PI * r;
   const dash = circ * Math.min(remaining / total, 1);
   return (
-    <svg width="60" height="60" viewBox="0 0 60 60" style={{ transform: 'rotate(-90deg)' }}>
-      <circle cx="30" cy="30" r={r} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="4" />
-      <circle
-        cx="30" cy="30" r={r} fill="none"
-        stroke={isPaused ? '#f97316' : 'var(--primary)'}
-        strokeWidth="4"
-        strokeDasharray={`${dash} ${circ}`}
-        strokeLinecap="round"
-        style={{ transition: 'stroke-dasharray 0.4s linear, stroke 0.3s' }}
-      />
-      <text
-        x="30" y="35"
-        textAnchor="middle"
-        fill="white"
-        fontSize="13"
-        fontWeight="700"
-        style={{ transform: 'rotate(90deg)', transformOrigin: '30px 30px' }}
-      >
+    <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <svg width="70" height="70" viewBox="0 0 70 70" style={{ transform: 'rotate(-90deg)' }}>
+        <circle cx="35" cy="35" r={r} fill="rgba(0,0,0,0.4)" stroke="rgba(255,255,255,0.15)" strokeWidth="4" />
+        <circle
+          cx="35" cy="35" r={r} fill="none"
+          stroke="var(--primary)"
+          strokeWidth="4"
+          strokeDasharray={`${dash} ${circ}`}
+          strokeLinecap="round"
+          style={{ transition: 'stroke-dasharray 0.1s linear' }}
+        />
+      </svg>
+      <div style={{ position: 'absolute', color: '#fff', fontSize: '1.2rem', fontWeight: '700', fontVariantNumeric: 'tabular-nums' }}>
         {Math.ceil(remaining)}
-      </text>
-    </svg>
+      </div>
+    </div>
   );
 };
 
@@ -388,10 +384,9 @@ const GuidedWorkout = ({ workout, onEnd }) => {
   const exercises = getWorkoutExercises(workout.name);
   const [exerciseIdx, setExerciseIdx] = useState(0);
   const [stepIdx, setStepIdx] = useState(0);
-  const [animating, setAnimating] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(null); // initialised after first render
+  const [timeLeft, setTimeLeft] = useState(null);
   const timerRef = useRef(null);
 
   const currentExercise = exercises[exerciseIdx];
@@ -399,42 +394,24 @@ const GuidedWorkout = ({ workout, onEnd }) => {
   const stepDuration = currentStep.duration ?? DEFAULT_DURATION;
   const totalSteps = currentExercise.steps.length;
   const isFirst = exerciseIdx === 0 && stepIdx === 0;
-  const isLastStep = exerciseIdx === exercises.length - 1 && stepIdx === totalSteps - 1;
-
-  // Initialise timeLeft whenever the step changes
+  
   useEffect(() => {
     setTimeLeft(stepDuration);
   }, [exerciseIdx, stepIdx, stepDuration]);
 
-  // Overall progress bar
-  const overallProgress = (() => {
-    const totalAll = exercises.reduce((a, ex) => a + ex.steps.length, 0);
-    let done = 0;
-    for (let i = 0; i < exerciseIdx; i++) done += exercises[i].steps.length;
-    done += stepIdx;
-    return (done / totalAll) * 100;
-  })();
-
-  /* ── Advance ── */
   const advance = useCallback(() => {
-    setAnimating(true);
-    setTimeout(() => {
-      setStepIdx(prev => {
-        const ex = exercises[exerciseIdx];
-        if (prev < ex.steps.length - 1) return prev + 1;
-        // move to next exercise
-        setExerciseIdx(ei => {
-          if (ei < exercises.length - 1) return ei + 1;
-          setIsCompleted(true);
-          return ei;
-        });
-        return 0;
+    setStepIdx(prev => {
+      const ex = exercises[exerciseIdx];
+      if (prev < ex.steps.length - 1) return prev + 1;
+      setExerciseIdx(ei => {
+        if (ei < exercises.length - 1) return ei + 1;
+        setIsCompleted(true);
+        return ei;
       });
-      setAnimating(false);
-    }, 200);
+      return 0;
+    });
   }, [exercises, exerciseIdx]);
 
-  /* ── Timer ── */
   useEffect(() => {
     if (timeLeft === null || isCompleted || isPaused) return;
     timerRef.current = setInterval(() => {
@@ -446,14 +423,13 @@ const GuidedWorkout = ({ workout, onEnd }) => {
     return () => clearInterval(timerRef.current);
   }, [isPaused, isCompleted, advance, stepDuration, timeLeft === null]);
 
-  /* Body scroll lock */
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => { document.body.style.overflow = 'auto'; };
   }, []);
 
-  /* ── Manual nav ── */
   const goNext = () => {
+    const isLastStep = exerciseIdx === exercises.length - 1 && stepIdx === totalSteps - 1;
     if (isLastStep) { setIsCompleted(true); return; }
     clearInterval(timerRef.current);
     advance();
@@ -462,137 +438,95 @@ const GuidedWorkout = ({ workout, onEnd }) => {
   const goPrev = () => {
     if (isFirst) return;
     clearInterval(timerRef.current);
-    setAnimating(true);
-    setTimeout(() => {
-      if (stepIdx > 0) {
-        setStepIdx(p => p - 1);
-      } else {
-        const prevEx = exercises[exerciseIdx - 1];
-        setExerciseIdx(e => e - 1);
-        setStepIdx(prevEx.steps.length - 1);
-      }
-      setAnimating(false);
-    }, 200);
+    if (stepIdx > 0) {
+      setStepIdx(p => p - 1);
+    } else {
+      const prevEx = exercises[exerciseIdx - 1];
+      setExerciseIdx(e => e - 1);
+      setStepIdx(prevEx.steps.length - 1);
+    }
   };
 
-  /* ── Completion Screen ── */
   if (isCompleted) {
     const totalAllSteps = exercises.reduce((a, ex) => a + ex.steps.length, 0);
-    return (
-      <div className="guided-workout-overlay animate-fade-in">
-        <div className="guided-workout-container" style={{ justifyContent: 'center', alignItems: 'center', textAlign: 'center', gap: '1.5rem' }}>
-          <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-            <div className="completion-trophy">
-              <Trophy size={90} color="var(--accent)" style={{ filter: 'drop-shadow(0 0 24px rgba(220,163,88,0.7))' }} />
-            </div>
-            <h1 className="text-gradient" style={{ fontSize: '2.8rem', margin: 0 }}>Workout Complete!</h1>
-            <p style={{ fontSize: '1.1rem', color: 'var(--text-muted)', maxWidth: '400px', margin: 0 }}>
-              Amazing! You crushed <strong style={{ color: 'var(--accent)' }}>{workout.name}</strong>
-              <br />{totalAllSteps} steps · {exercises.length} exercises 🔥
-            </p>
-            <button onClick={onEnd} style={{ marginTop: '1rem', maxWidth: '260px', width: '100%', position: 'relative', zIndex: 10 }}>
-              Return to Workouts
-            </button>
-          </div>
-          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% 40%, rgba(133,154,81,0.18) 0%, rgba(0,0,0,0) 65%)', pointerEvents: 'none' }} />
+    return createPortal(
+      <div className="completion-screen animate-fade-in">
+        <Trophy size={100} color="var(--primary)" style={{ filter: 'drop-shadow(0 0 40px rgba(225,29,72,0.5))' }} className="completion-trophy" />
+        <div style={{ textAlign: 'center' }}>
+          <h1 style={{ color: '#fff', fontSize: '3rem', fontWeight: 800, marginBottom: '1rem', letterSpacing: '-0.02em' }}>Workout Complete!</h1>
+          <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.2rem', margin: 0 }}>
+            You crushed <span style={{ color: '#fff', fontWeight: 600 }}>{workout.name}</span>.<br/>
+            {totalAllSteps} steps completed across {exercises.length} exercises.
+          </p>
         </div>
-      </div>
+        <button onClick={onEnd} style={{ marginTop: '2rem', width: 'auto', padding: '1rem 3rem', fontSize: '1.1rem', borderRadius: '30px' }}>
+          Done
+        </button>
+      </div>,
+      document.body
     );
   }
 
-  return (
-    <div className="guided-workout-overlay animate-fade-in">
-      {/* ── Header ── */}
-      <div className="guided-workout-header">
-        <button onClick={onEnd} className="back-btn">
-          <X size={20} /><span>Exit</span>
+  return createPortal(
+    <div className="gw-fullscreen">
+      <div className="gw-media-layer">
+        <img key={currentStep.image} src={currentStep.image} className="gw-image" alt="" />
+        <div className="gw-gradient-overlay" />
+      </div>
+
+      <div className="gw-progress-container">
+        {currentExercise.steps.map((_, i) => {
+          let width = '0%';
+          if (i < stepIdx) width = '100%';
+          else if (i === stepIdx && timeLeft !== null) width = `${100 - (timeLeft / stepDuration) * 100}%`;
+          
+          return (
+            <div key={i} className="gw-progress-segment">
+              <div className="gw-progress-fill" style={{ width }} />
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="gw-header">
+        <div className="gw-exercise-info">
+          <span className="gw-exercise-subtitle">Exercise {exerciseIdx + 1} of {exercises.length}</span>
+          <h2 className="gw-exercise-title">{currentExercise.name}</h2>
+        </div>
+        <button onClick={onEnd} className="gw-close-btn">
+          <X size={24} />
         </button>
+      </div>
 
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '4px', margin: '0 1.25rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-            <span style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-main)' }}>
-              {currentExercise.name}
-            </span>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-              Ex {exerciseIdx + 1}/{exercises.length} · Step {stepIdx + 1}/{totalSteps}
-            </span>
-          </div>
-          <div className="progress-bar-container" style={{ margin: 0 }}>
-            <div className="progress-bar" style={{ width: `${overallProgress}%` }} />
-          </div>
+      <div className="gw-content-layer">
+        <div key={`${exerciseIdx}-${stepIdx}`} className="gw-animate-instruction">
+          <h3 className="gw-instruction">{currentStep.text}</h3>
         </div>
 
-        {/* Countdown ring (tap to pause) */}
-        <div style={{ cursor: 'pointer', position: 'relative' }} onClick={() => setIsPaused(p => !p)}>
-          {timeLeft !== null && (
-            <CountdownRing total={stepDuration} remaining={timeLeft} isPaused={isPaused} />
-          )}
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {isPaused
-              ? <Play size={12} color="white" />
-              : <Pause size={12} color="white" style={{ opacity: 0.35 }} />}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginTop: 'auto' }}>
+          <div className="gw-timer-ring-container" style={{ width: '100px' }}>
+            {timeLeft !== null && <CountdownRing total={stepDuration} remaining={timeLeft} />}
+          </div>
+
+          <div className="gw-controls">
+            <button className="gw-skip-btn" onClick={goPrev} disabled={isFirst}>
+              <ArrowLeft size={24} />
+            </button>
+            <button className="gw-master-play" onClick={() => setIsPaused(p => !p)}>
+              {isPaused ? <Play size={36} fill="currentColor" style={{ marginLeft: '4px' }} /> : <Pause size={36} fill="currentColor" />}
+            </button>
+            <button className="gw-skip-btn" onClick={goNext}>
+              <ArrowRight size={24} />
+            </button>
+          </div>
+          
+          <div style={{ width: '100px', display: 'flex', justifyContent: 'flex-end', color: 'rgba(255,255,255,0.5)', fontWeight: 600 }}>
+            {stepIdx + 1} / {totalSteps}
           </div>
         </div>
       </div>
-
-      {/* ── Step Card ── */}
-      <div className="guided-workout-container">
-        <div className={`glass-card exercise-card visual-step-card ${animating ? 'step-exit' : 'step-enter'}`}>
-          <div className="exercise-image-wrapper">
-            <img
-              key={`${exerciseIdx}-${stepIdx}`}
-              src={currentStep.image}
-              alt={currentStep.text}
-              className="exercise-image"
-            />
-            <div className="step-badge">Step {stepIdx + 1}</div>
-            <div className="exercise-chip"><Dumbbell size={13} />{currentExercise.name}</div>
-            {/* Duration chip */}
-            {currentStep.duration && currentStep.duration > DEFAULT_DURATION && (
-              <div className="duration-chip">⏱ {currentStep.duration}s hold</div>
-            )}
-          </div>
-
-          <div className="visual-step-instruction">
-            <p className="visual-step-text">{currentStep.text}</p>
-          </div>
-
-          <div className="step-dots">
-            {currentExercise.steps.map((_, i) => (
-              <div key={i} className={`step-dot ${i === stepIdx ? 'active' : i < stepIdx ? 'done' : ''}`} />
-            ))}
-          </div>
-        </div>
-
-        {/* ── Controls ── */}
-        <div className="guided-workout-controls">
-          <button
-            onClick={goPrev}
-            disabled={isFirst}
-            className="nav-btn secondary"
-            style={{ opacity: isFirst ? 0.4 : 1, cursor: isFirst ? 'not-allowed' : 'pointer' }}
-          >
-            <ArrowLeft size={18} /> Previous
-          </button>
-
-          <button
-            onClick={() => setIsPaused(p => !p)}
-            className="nav-btn secondary"
-            style={{ flexGrow: 0, padding: '0 1.5rem' }}
-          >
-            {isPaused ? <><Play size={18} /> Resume</> : <><Pause size={18} /> Pause</>}
-          </button>
-
-          <button onClick={goNext} className="nav-btn">
-            {isLastStep
-              ? <><CheckCircle size={18} /> Finish</>
-              : stepIdx === totalSteps - 1
-                ? <><ArrowRight size={18} /> Next Exercise</>
-                : <>Next Step <ArrowRight size={18} /></>}
-          </button>
-        </div>
-      </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

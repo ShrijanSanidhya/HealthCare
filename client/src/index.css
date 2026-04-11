@@ -448,250 +448,230 @@ button.secondary:hover {
   text-shadow: 0 1px 4px rgba(0,0,0,0.8);
 }
 
-/* Guided Workout UI */
-.guided-workout-overlay {
+/* ── PREMIUM FULLSCREEN GUIDED WORKOUT UI ── */
+.guided-workout-fullscreen {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: var(--bg-dark);
-  z-index: 1000;
+  inset: 0;
+  background-color: #000;
+  z-index: 9999;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
-}
-
-.guided-workout-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem 2rem;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-  background: var(--bg-card);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.back-btn {
-  background: transparent;
-  width: auto;
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--text-muted);
-  font-weight: 500;
-}
-.back-btn:hover {
-  box-shadow: none;
-  background: rgba(255,255,255,0.05);
-  color: white;
-}
-
-.progress-bar-container {
-  flex: 1;
-  max-width: 400px;
-  height: 8px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 4px;
-  margin: 0 2rem;
   overflow: hidden;
+  font-family: 'Inter', sans-serif;
 }
 
-.progress-bar {
-  height: 100%;
-  background: var(--primary);
-  border-radius: 4px;
-  transition: width 0.4s ease;
-  box-shadow: 0 0 10px var(--primary-glow);
+/* Background Media & Gradients */
+.gw-media-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
 }
 
-.exercise-counter {
-  color: var(--text-muted);
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-.guided-workout-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-/* === VISUAL STEP CARD === */
-.exercise-card {
-  padding: 0;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1.5rem;
-  border: 1px solid rgba(255,255,255,0.07);
-}
-.exercise-card:hover {
-  transform: none;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-}
-
-.visual-step-card {
-  position: relative;
-}
-
-/* Transition animations */
-@keyframes stepEnter {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes stepExit {
-  from { opacity: 1; transform: translateY(0); }
-  to   { opacity: 0; transform: translateY(-12px); }
-}
-.step-enter {
-  animation: stepEnter 0.25s ease forwards;
-}
-.step-exit {
-  animation: stepExit 0.15s ease forwards;
-}
-
-/* Completion trophy pulse */
-@keyframes trophyPulse {
-  0%,100% { transform: scale(1); }
-  50% { transform: scale(1.08); }
-}
-.completion-trophy {
-  animation: trophyPulse 1.8s ease-in-out infinite;
-}
-
-.exercise-image-wrapper {
-  width: 100%;
-  height: 400px;
-  background: #111;
-  position: relative;
-  overflow: hidden;
-}
-
-.exercise-image {
+.gw-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  animation: stepEnter 0.3s ease forwards;
+  opacity: 0.75;
+  filter: brightness(0.8) contrast(1.1);
+  transition: opacity 0.5s ease;
 }
 
-/* Step badge — top-left of image */
-.step-badge {
+.gw-gradient-overlay {
   position: absolute;
-  top: 1rem;
-  left: 1rem;
-  background: rgba(0,0,0,0.65);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.15);
-  color: #fff;
-  font-size: 0.8rem;
-  font-weight: 700;
-  padding: 0.3rem 0.75rem;
-  border-radius: 20px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 20%),
+              linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.8) 25%, rgba(0,0,0,0) 60%);
 }
 
-/* Exercise name chip — top-right of image */
-.exercise-chip {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: rgba(133,154,81,0.25);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--primary);
-  color: var(--primary);
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 0.3rem 0.75rem;
-  border-radius: 20px;
+/* Top Progress Tracker (Instagram Stories Style) */
+.gw-progress-container {
   display: flex;
-  align-items: center;
-  gap: 5px;
+  gap: 6px;
+  padding: 12px 24px;
+  position: relative;
+  z-index: 10;
 }
 
-/* Step instruction text area */
-.visual-step-instruction {
-  padding: 1.75rem 2rem 1rem;
-  background: var(--bg-card);
-}
-
-.visual-step-text {
-  margin: 0;
-  font-size: 1.2rem;
-  font-weight: 500;
-  line-height: 1.65;
-  color: var(--text-main);
-  text-align: center;
-}
-
-/* Step progress dots */
-.step-dots {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  padding: 1rem 2rem 1.5rem;
-  background: var(--bg-card);
-}
-
-.step-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.15);
-  transition: all 0.3s ease;
-}
-.step-dot.active {
-  width: 22px;
+.gw-progress-segment {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 4px;
-  background: var(--primary);
-  box-shadow: 0 0 8px var(--primary-glow);
+  overflow: hidden;
 }
-.step-dot.done {
-  background: rgba(133,154,81,0.45);
+
+.gw-progress-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 4px;
+  box-shadow: 0 0 8px var(--primary-glow);
+  transition: width 0.1s linear;
+}
+
+/* Header */
+.gw-header {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0 24px;
+}
+
+.gw-exercise-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gw-exercise-title {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  margin: 0;
+}
+
+.gw-exercise-subtitle {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.gw-close-btn {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.1);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.gw-close-btn:hover {
+  background: rgba(255,255,255,0.2);
+  transform: scale(1.05);
+}
+
+/* Main Content Area */
+.gw-content-layer {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 40px 60px 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.gw-instruction {
+  font-size: 2.2rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.8);
+  margin-bottom: 2rem;
+  max-width: 800px;
+  min-height: 80px;
 }
 
 /* Controls */
-.guided-workout-controls {
+.gw-controls {
   display: flex;
-  justify-content: space-between;
-  gap: 1rem;
+  align-items: center;
+  gap: 2rem;
 }
 
-.nav-btn {
+.gw-master-play {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  flex: 1;
-  max-width: 300px;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 0 24px var(--primary-glow), inset 0 0 0 2px rgba(255,255,255,0.2);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  padding: 0;
+  border: none;
 }
-.nav-btn.secondary.disabled {
-  opacity: 0.5;
+
+.gw-master-play:hover {
+  transform: scale(1.1);
+}
+
+.gw-skip-btn {
+  background: transparent;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.gw-skip-btn:hover:not(:disabled) {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border-color: rgba(255,255,255,0.2);
+}
+
+.gw-skip-btn:disabled {
+  opacity: 0.3;
   cursor: not-allowed;
 }
 
-/* Duration hold chip — bottom-left of image */
-.duration-chip {
-  position: absolute;
-  bottom: 1rem;
-  left: 1rem;
-  background: rgba(249, 115, 22, 0.25);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid #f97316;
-  color: #f97316;
-  font-size: 0.78rem;
+.gw-timer-ring-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.gw-timer-text {
+  font-size: 2rem;
   font-weight: 700;
-  padding: 0.3rem 0.75rem;
-  border-radius: 20px;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+/* Animations */
+@keyframes gwSlideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.gw-animate-instruction {
+  animation: gwSlideUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.completion-screen {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, #1a1a24 0%, #000 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  gap: 2rem;
 }
