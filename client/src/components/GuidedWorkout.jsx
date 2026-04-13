@@ -503,26 +503,19 @@ const GuidedWorkout = ({ workout, onEnd }) => {
           <h3 className="gw-instruction">{currentStep.text}</h3>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginTop: 'auto' }}>
-          <div className="gw-timer-ring-container" style={{ width: '100px' }}>
-            {timeLeft !== null && <CountdownRing total={stepDuration} remaining={timeLeft} />}
-          </div>
-
+        <div className="gw-bottom-bar">
           <div className="gw-controls">
             <button className="gw-skip-btn" onClick={goPrev} disabled={isFirst}>
-              <ArrowLeft size={24} />
+              <ArrowLeft size={22} />
             </button>
             <button className="gw-master-play" onClick={() => setIsPaused(p => !p)}>
-              {isPaused ? <Play size={36} fill="currentColor" style={{ marginLeft: '4px' }} /> : <Pause size={36} fill="currentColor" />}
+              {isPaused ? <Play size={30} fill="currentColor" style={{ marginLeft: '3px' }} /> : <Pause size={30} fill="currentColor" />}
             </button>
             <button className="gw-skip-btn" onClick={goNext}>
-              <ArrowRight size={24} />
+              <ArrowRight size={22} />
             </button>
           </div>
-          
-          <div style={{ width: '100px', display: 'flex', justifyContent: 'flex-end', color: 'rgba(255,255,255,0.5)', fontWeight: 600 }}>
-            {stepIdx + 1} / {totalSteps}
-          </div>
+          {timeLeft !== null && <CountdownRing total={stepDuration} remaining={timeLeft} />}
         </div>
       </div>
     </div>,
