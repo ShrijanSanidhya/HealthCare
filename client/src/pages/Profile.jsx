@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { User, Award, Brain, Settings, Hash, Activity, Flame, ChevronRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const Profile = () => {
     const { api, user } = useContext(AuthContext);
+    const navigate = useNavigate();
     const [data, setData] = useState(null);
     const [insights, setInsights] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -93,7 +95,7 @@ const Profile = () => {
                         </div>
                     </div>
                     
-                    <button className="secondary" style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
+                    <button className="secondary" onClick={() => navigate('/onboarding')} style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
                         Edit configuration <ChevronRight size={16} />
                     </button>
                 </div>
