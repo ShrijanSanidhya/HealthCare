@@ -1,0 +1,11 @@
+{
+  "buildCommand": "if [ -d client ]; then npm --prefix client run build && rm -rf dist && cp -R client/dist dist; else npm run build; fi",
+  "installCommand": "if [ -d client ]; then npm --prefix client install; else npm install; fi",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

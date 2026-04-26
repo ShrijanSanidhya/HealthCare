@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     // Create a stable axios instance that persists across renders
-    const apiRef = useRef(axios.create({ baseURL: 'http://localhost:5005/api' }));
+    const apiRef = useRef(axios.create({ baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5005/api' }));
     const api = apiRef.current;
 
     // Keep the Authorization header in sync whenever token changes
