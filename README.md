@@ -68,17 +68,11 @@ The project is structured as a monorepo containing the following directories:
     ```bash
     npm install
     ```
-3.  Configure environment variables by creating a `.env` file in the `server` directory:
-    ```env
-    MONGODB_URI=mongodb://127.0.0.1:27017/fitai
-    JWT_SECRET=your_jwt_secret_key
-    PORT=5005
-    ```
+3.  Configure environment variables in a `.env` file in the `server` directory.
 4.  Start the backend development server:
     ```bash
     npm run dev
     ```
-    The server will start running at `http://localhost:5005`.
 
 ### Frontend Setup
 1.  Navigate to the client directory:
@@ -89,12 +83,8 @@ The project is structured as a monorepo containing the following directories:
     ```bash
     npm install
     ```
-3.  Configure environment variables by creating a `.env` file in the `client` directory:
-    ```env
-    VITE_API_URL=http://localhost:5005/api
-    ```
+3.  Configure environment variables in a `.env` file in the `client` directory (refer to `.env.example`).
 4.  Start the frontend development server:
     ```bash
     npm run dev
     ```
-    The app will start running at `http://localhost:5173`. Open this URL in your browser to view the application.
